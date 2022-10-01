@@ -1,0 +1,176 @@
+Registration
+
+<?php 
+session_start();
+?> 
+    
+    
+    
+    
+    
+    include 'dbcon.php';
+
+    <?php 
+if(isset($_POST['submit'])){
+   $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
+   $email = mysqli_real_escape_string($con, $_POST['email']);
+   $password = mysqli_real_escape_string($con, $_POST['password']);
+   $cpassword= mysqli_real_escape_string($con, $_POST['cpassword']);
+    
+    $pass = password_hash($password, PASSWORD_BCRYPT);
+    $cpass = password_hash($cpassword, PASSWORD_BCRYPT);
+    
+    $emailquery = " select * from registration where emails = '$email' ";
+    $query = mysqli_query($con, $emailquery);
+    
+    $emailcount = mysqli_num_rows($query);
+    
+    if($emailcount>0){
+        echo "Email already exists";
+        
+    }else{
+    if($password === $cpassword){
+    $insertquery = "insert into registration(fullname, email, password, cpassword) values('$fullname', '$email', '$pass', '$cpass')";
+
+    $iquery = mysqli_query($con, $insertquery);
+
+    
+    if($iquery){
+    ?>
+    <script>
+        alert("Inserted Successful");
+    </script>
+    <?php
+}
+
+else {
+     ?>
+    <script>
+        alert("Not Inserted");
+    </script>
+    <?php
+}
+     
+else {
+      echo "Password is not matching";  
+     }
+    }
+}       
+    ?>
+    
+Login
+
+<?php
+
+include 'dbcon.php';
+
+if(isset($_POST['submit'])){
+    $email= $_POST['email'];
+    $password = $_POST['password'];
+    
+    $email_search = " select * from registration where email= '$email' ";
+    $query = mysqli_query($con, $email_search);
+    
+    $email_count = mysqli_num_rows($query);
+    
+    if($email_count){
+        $email_pass = mysqli_fetch_assoc($query);
+        
+        $db_pass = $email_pass['password'];
+        
+        $pass_decode = password_verify($password, $db_pass);
+    
+    if($pass_decode){
+        echo "Login Successful";
+      ?>
+      <script>
+          location.replace("index.html");
+      </script>
+      <?php
+    }else {
+       echo "Incorrect Password";
+    }else {
+       echo "Invalid Email";
+    }
+    
+    }
+}
+
+
+
+<?php 
+if(isset($_POST['submit'])){
+   $title = mysqli_real_escape_string($con, trim($_POST['title']));
+   $date = mysqli_real_escape_string($con, trim($_POST['date']));
+   $starttime = mysqli_real_escape_string($con, trim($_POST['start time']));
+   $endime= mysqli_real_escape_string($con, trim($_POST['end time']));
+   $meetinglink= mysqli_real_escape_string($con, trim($_POST['meeting link']));
+   $meetingid= mysqli_real_escape_string($con, trim($_POST['meeting id']));
+   $meetingpassword= mysqli_real_escape_string($con, trim($_POST['meeting password']));
+    
+    $meetingpassword = password_hash($meetingpassword, PASSWORD_BCRYPT);
+ 
+    $emailquery = " select * from organise where title = '$title' ";
+    $query = mysqli_query($con, $titlequery);
+    
+    $titlecount = mysqli_num_rows($query);
+    
+    if($titlecount>0){
+        echo "Title already exists";
+        
+    }else{
+    if($password === $cpassword){
+    $insertquery = "insert into organise(title, date, start time, end time, meeting link, meeting id, meeting password) values('$itle', '$date', '$starttime', '$endtime', '$meetinglink', '$meetingid', '$meetingpassword')";
+
+    $iquery = mysqli_query($con, $insertquery);
+
+    
+    if($iquery){
+    ?>
+    <script>
+        alert("Inserted Successful");
+    </script>
+    <?php
+}
+
+else {
+     ?>
+    <script>
+        alert("Not Inserted");
+    </script>
+    <?php
+}
+    }
+    }
+}       
+    ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
